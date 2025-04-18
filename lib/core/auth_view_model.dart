@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../domain/models/user.dart';
 
 class AuthViewModel extends ChangeNotifier {
   String _email = '';
@@ -8,6 +9,12 @@ class AuthViewModel extends ChangeNotifier {
   String? _passwordError;
   String? _confirmPasswordError;
   bool _isLoading = false;
+  Role _selectedRole = Role.buyer; // Default role
+  Gender? _selectedGender;
+  String _adminToken = '';
+  String? _adminTokenError;
+  String? _roleError;
+  String? _genderError;
 
   String get email => _email;
   String get password => _password;
@@ -16,6 +23,12 @@ class AuthViewModel extends ChangeNotifier {
   String? get passwordError => _passwordError;
   String? get confirmPasswordError => _confirmPasswordError;
   bool get isLoading => _isLoading;
+  Role get selectedRole => _selectedRole;
+  Gender? get selectedGender => _selectedGender;
+  String get adminToken => _adminToken;
+  String? get adminTokenError => _adminTokenError;
+  String? get roleError => _roleError;
+  String? get genderError => _genderError;
 
   void setEmail(String value) {
     _email = value;
@@ -32,6 +45,28 @@ class AuthViewModel extends ChangeNotifier {
   void setConfirmPassword(String value) {
     _confirmPassword = value;
     _validateConfirmPassword();
+    notifyListeners();
+  }
+
+  void setRole(Role? value) {
+    if (value != null) {
+      _selectedRole = value;
+      _validateRole();
+    }
+    notifyListeners();
+  }
+
+  void setGender(Gender? value) {
+    if (value != null) {
+      _selectedGender = value;
+      _validateRole(); // Re-validate role based on gender
+    }
+    notifyListeners();
+  }
+
+  void setAdminToken(String value) {
+    _adminToken = value;
+    _validateAdminToken();
     notifyListeners();
   }
 
@@ -75,6 +110,46 @@ class AuthViewModel extends ChangeNotifier {
     return true;
   }
 
+  bool _validateRole() {
+    if (_selectedGender == null) {
+      _roleError = null;
+      return true;
+    }
+    if (_selectedGender == Gender.male && _selectedRole == Role.seller) {
+      _roleError = 'Males can only be Buyers';
+      return false;
+    }
+    if (_selectedRole == Role.admin && _adminToken.isEmpty) {
+      _roleError = 'Admin role requires a token';
+      return false;
+    }
+    _roleError = null;
+    return true;
+  }
+
+  bool _validateGender() {
+    if (_selectedGender == null) {
+      _genderError = 'Gender is required';
+      return false;
+    }
+    _genderError = null;
+    return true;
+  }
+
+  bool _validateAdminToken() {
+    if (_selectedRole == Role.admin && _adminToken.isEmpty) {
+      _adminTokenError = 'Admin token is required';
+      return false;
+    }
+    // Simulate token validation (replace with actual validation)
+    if (_selectedRole == Role.admin && _adminToken != 'ADMIN_TOKEN_123') {
+      _adminTokenError = 'Invalid admin token';
+      return false;
+    }
+    _adminTokenError = null;
+    return true;
+  }
+
   bool validateLoginForm() {
     bool isEmailValid = _validateEmail();
     bool isPasswordValid = _validatePassword();
@@ -85,7 +160,15 @@ class AuthViewModel extends ChangeNotifier {
     bool isEmailValid = _validateEmail();
     bool isPasswordValid = _validatePassword();
     bool isConfirmPasswordValid = _validateConfirmPassword();
-    return isEmailValid && isPasswordValid && isConfirmPasswordValid;
+    bool isRoleValid = _validateRole();
+    bool isGenderValid = _validateGender();
+    bool isAdminTokenValid = _selectedRole == Role.admin ? _validateAdminToken() : true;
+    return isEmailValid &&
+        isPasswordValid &&
+        isConfirmPasswordValid &&
+        isRoleValid &&
+        isGenderValid &&
+        isAdminTokenValid;
   }
 
   Future<bool> login() async {
@@ -93,8 +176,8 @@ class AuthViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // Simulate API call
-    await Future<Duration>.delayed(const Duration(seconds: 2));
+    // Simulate API call for login
+    await Future.delayed(Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();
@@ -106,8 +189,8 @@ class AuthViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    // Simulate API call
-    await Future<Duration>.delayed(const Duration(seconds: 2));
+    // Simulate API call for registration
+    await Future.delayed(Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();
