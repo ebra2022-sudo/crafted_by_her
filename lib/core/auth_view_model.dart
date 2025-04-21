@@ -2,9 +2,20 @@ import 'package:flutter/material.dart';
 import '../domain/models/user.dart';
 
 class AuthViewModel extends ChangeNotifier {
+  String _firstName = '';
+  String _lastName = '';
   String _email = '';
   String _password = '';
   String _confirmPassword = '';
+
+  String get firstName => _firstName;
+  String get lastName => _lastName;
+  String get email => _email;
+  String get password => _password;
+  String get confirmPassword => _confirmPassword;
+
+  String? _firstNameError;
+  String? _lastNameError;
   String? _emailError;
   String? _passwordError;
   String? _confirmPasswordError;
@@ -16,9 +27,8 @@ class AuthViewModel extends ChangeNotifier {
   String? _roleError;
   String? _genderError;
 
-  String get email => _email;
-  String get password => _password;
-  String get confirmPassword => _confirmPassword;
+  String? get firstNameError => _firstNameError;
+  String? get lastNameError => _lastNameError;
   String? get emailError => _emailError;
   String? get passwordError => _passwordError;
   String? get confirmPasswordError => _confirmPasswordError;
@@ -29,6 +39,22 @@ class AuthViewModel extends ChangeNotifier {
   String? get adminTokenError => _adminTokenError;
   String? get roleError => _roleError;
   String? get genderError => _genderError;
+
+  void setFirstName(String value) {
+    _firstName = value;
+    if (_firstName.length > 12) {
+      _firstNameError = 'The length should be at most 12 characters';
+    }
+    notifyListeners();
+  }
+
+  void setLastName(String value) {
+    _lastName = value;
+    if (_lastName.length > 12) {
+      _lastNameError = 'The length should be at most 12 characters';
+    }
+    notifyListeners();
+  }
 
   void setEmail(String value) {
     _email = value;
@@ -69,6 +95,7 @@ class AuthViewModel extends ChangeNotifier {
     _validateAdminToken();
     notifyListeners();
   }
+
 
   bool _validateEmail() {
     if (_email.isEmpty) {
@@ -177,7 +204,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     // Simulate API call for login
-    await Future.delayed(Duration(seconds: 2));
+    await Future<Duration>.delayed(const Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();
@@ -190,7 +217,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     // Simulate API call for registration
-    await Future.delayed(Duration(seconds: 2));
+    await Future<Duration>.delayed(const Duration(seconds: 2));
 
     _isLoading = false;
     notifyListeners();
