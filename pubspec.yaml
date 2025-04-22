@@ -23,8 +23,26 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: DMSerif
+      fonts:
+        - asset: assets/font/DMSerifDisplay-Regular.ttf
+
+    - family: Roboto
+      fonts:
+        - asset: assets/font/Roboto-VariableFont_wdth,wght.ttf
+
+    - family: OpenSans
+      fonts:
+        - asset: assets/font/OpenSans-VariableFont_wdth,wght.ttf
+
+
+
+
+
   assets:
     - assets/icon/icon.png
+    - assets/font/
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -1,4 +1,5 @@
 enum Role { buyer, seller, admin }
+
 enum Gender { male, female }
 
 class User {
