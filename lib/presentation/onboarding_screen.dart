@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'main_screens.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -48,7 +49,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _nextPage() {
     if (_currentPage < onboardingData.length - 1) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
     } else {
@@ -69,6 +70,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -78,16 +80,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildProgressIndicator(),
-                  TextButton(
-                    onPressed: _skip,
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(
-                          fontFamily: 'Roboto',
-                          color: Color.fromARGB(255, 242, 92, 5),
-                          fontSize: 16),
+                  Flexible(
+                      child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: TextButton(
+                      onPressed: _skip,
+                      child: const Text(
+                        'Skip',
+                        style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: Color.fromARGB(255, 242, 92, 5),
+                            fontSize: 16),
+                      ),
                     ),
-                  ),
+                  ))
                 ],
               ),
             ),
@@ -104,19 +110,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         Image.asset(
                           onboardingData[index]['image']!,
-                          width: 200,
+                          width: 230,
                           height: 200,
                         ),
                         const SizedBox(height: 32),
-                        Text(
-                          onboardingData[index]['title']!,
-                          style: const TextStyle(
-                            fontFamily: 'DMSerif',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 242, 92, 5),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            onboardingData[index]['title']!,
+                            style: const TextStyle(
+                              fontFamily: 'DMSerif',
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 242, 92, 5),
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -124,7 +133,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: const TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 16,
-                              color: Colors.grey),
+                              color: Colors.black),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -136,27 +145,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: ElevatedButton(
-                onPressed: _nextPage,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 242, 92, 5),
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(4), // Set corner radius here
+                  onPressed: _nextPage,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 242, 92, 5),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(4), // Set corner radius here
+                      ),
+                      elevation: 0.0),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _currentPage == onboardingData.length - 1
+                          ? 'Get Started'
+                          : 'Next',
+                      style: const TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 245, 245, 245),
+                          fontSize: 14,
+                          letterSpacing: 0.2),
                     ),
-                    elevation: 0.0),
-                child: Text(
-                  _currentPage == onboardingData.length - 1
-                      ? 'Get Started'
-                      : 'Next',
-                  style: const TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 245, 245, 245),
-                      fontSize: 14,
-                      letterSpacing: 0.2),
-                ),
-              ),
+                  )),
             ),
           ],
         ),

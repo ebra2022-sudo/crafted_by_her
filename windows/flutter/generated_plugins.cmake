@@ -3,8 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  cloud_firestore
-  firebase_core
+  connectivity_plus
+  file_selector_windows
+  flutter_inappwebview_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
