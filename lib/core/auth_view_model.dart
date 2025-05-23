@@ -1842,22 +1842,26 @@ class AuthViewModel extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         await fetchInactiveUsers(); // Refresh list
+        if(context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('User deactivated due to excessive warnings!'),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if(context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('User deactivated due to excessive warnings!'),
-            backgroundColor: Colors.orange,
-            duration: const Duration(seconds: 2),
+          SnackBar(
+            content: Text('Failed to deactivate user: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to deactivate user: $e'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 3),
-        ),
-      );
     }
   }
 

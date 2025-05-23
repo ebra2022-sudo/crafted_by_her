@@ -185,15 +185,19 @@ class SegmentedControl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: AppColors.lightGrey, borderRadius: BorderRadius.circular(8)),
+        color: Colors.grey[200], // Fallback if AppColors.lightGrey is undefined
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: List.generate(tabs.length, (index) {
-          bool isSelected = selectedIndex == index;
+          final isSelected = selectedIndex == index;
           return Expanded(
-            child: GestureDetector(
+            child: InkWell(
               onTap: () => onTabSelected(index),
+              borderRadius: BorderRadius.circular(8),
+              splashColor: selectedColor.withOpacity(0.3), // Visual feedback
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                 decoration: BoxDecoration(
                   color: isSelected ? selectedColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
@@ -202,11 +206,11 @@ class SegmentedControl extends StatelessWidget {
                   tabs[index],
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: isSelected ? Colors.white : AppColors.secondaryText,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? Colors.white : Colors.grey[600], // Fallback
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                     fontSize: 14,
                   ),
+                  overflow: TextOverflow.ellipsis, // Handle long text
                 ),
               ),
             ),
